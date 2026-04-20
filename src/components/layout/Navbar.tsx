@@ -1,0 +1,226 @@
+import React, { useEffect, useState } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+
+const navigationItems = [
+  { label: "Home", path: "/dashboard" },
+  { label: "Puja", path: "/puja" },
+  { label: "Chadhava", path: "/chadhava" },
+  { label: "Panchang", path: "/panchang" },
+  { label: "Temples", path: "/temples" },
+  { label: "Library", path: "/library" },
+  { label: "Astro Tools", path: "/astro-tools" },
+  { label: "Store", path: "/store" },
+];
+
+export default function Navbar() {
+  const pathname = usePathname();
+  const [user, setUser] = useState<{ name: string; email: string } | null>(null);
+
+  useEffect(() => {
+    fetch("/api/auth/me")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.authenticated) {
+          setUser(data.user);
+        } else {
+          setUser(null);
+        }
+      })
+      .catch(() => setUser(null));
+  }, [pathname]);
+
+  const handleLogout = async () => {
+    await fetch("/api/auth/logout", { method: "POST" });
+    setUser(null);
+    window.location.href = "/dashboard";
+  };
+
+  return (
+    <section className="relative z-50 overflow-visible bg-white/95 backdrop-blur">
+      <div className="mx-auto grid max-w-6xl grid-cols-[1fr_auto] items-center gap-4 px-6 py-4 md:grid-cols-[1fr_auto_1fr]">
+        <div className="justify-self-start">
+          <p className="text-sm font-semibold uppercase tracking-[0.3em] text-[#6969fa]">
+            AstroVed
+          </p>
+          <h1 className="mt-1 text-xl font-semibold">Dashboard</h1>
+        </div>
+        <nav aria-label="Dashboard navigation" className="hidden md:block md:justify-self-center">
+          <ul className="flex items-center gap-8 text-[15px] font-semibold text-[#1f1f1f]">
+            {navigationItems.map((item) => (
+              <li key={item.label}>
+                <Link
+                  href={item.path}
+                  className={
+                    (pathname === item.path || (item.path !== "/dashboard" && pathname?.startsWith(item.path + "/")))
+                      ? "text-[#f47820]"
+                      : "transition-colors hover:text-[#6969fa]"
+                  }
+                >
+                  {item.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
+        <div className="justify-self-end">
+          <div className="group relative">
+            <button
+              type="button"
+              aria-label="Account menu"
+              className="flex h-11 w-11 items-center justify-center rounded-full border border-[#6969fa]/25 bg-white text-[#5a5add] shadow-sm transition-all duration-300 hover:border-[#6969fa]/50 hover:bg-[#f5f5ff]"
+            >
+              {user ? (
+                <div className="h-full w-full flex items-center justify-center bg-[#f47820] text-white rounded-full font-bold text-xs uppercase">
+                   {user.name.charAt(0)}
+                </div>
+              ) : (
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" className="h-6 w-6">
+                  <circle cx="12" cy="8" r="3.5" stroke="currentColor" strokeWidth="1.7" />
+                  <path
+                    d="M5 19a7 7 0 0 1 14 0"
+                    stroke="currentColor"
+                    strokeWidth="1.7"
+                    strokeLinecap="round"
+                  />
+                </svg>
+              )}
+            </button>
+            
+            {/* Redesigned Dropdown */}
+            <div className="pointer-events-none absolute right-0 top-full z-[80] mt-2 w-[320px] rounded-2xl border border-gray-100 bg-white shadow-[0_20px_50px_rgba(0,0,0,0.1)] opacity-0 transition-all duration-300 group-hover:pointer-events-auto group-hover:translate-y-2 group-hover:opacity-100 overflow-hidden">
+               {!user ? (
+                 <div className="p-5 border-b border-gray-50 bg-gray-50/30">
+                    <p className="text-[13px] text-gray-500 font-medium mb-3">To check all available pujas & offers:</p>
+                    <Link 
+                      href="/auth/login"
+                      className="block w-full bg-[#1a73e8] text-white text-center py-3 rounded-xl font-bold text-sm shadow-md shadow-blue-100 hover:bg-[#1557b0] transition-all"
+                    >
+                       Login / Create an account
+                    </Link>
+                 </div>
+               ) : (
+                 <div className="p-5 border-b border-gray-50 bg-[#0e915f]/5">
+                    <div className="flex items-center gap-3">
+                       <div className="h-10 w-10 bg-[#0e915f] text-white rounded-full flex items-center justify-center font-bold">
+                          {user.name.charAt(0)}
+                       </div>
+                       <div className="flex-1 min-w-0">
+                          <p className="text-xs font-bold text-[#0e915f] uppercase tracking-wider">Namaste,</p>
+                          <p className="text-sm font-bold text-gray-900 truncate">{user.name}</p>
+                       </div>
+                    </div>
+                 </div>
+               )}
+
+               <div className="p-2">
+                  <p className="px-4 py-2 text-[11px] font-bold text-gray-400 uppercase tracking-widest">Account Details</p>
+                  
+                  <nav className="space-y-0.5">
+                     <Link href="/profile" className="flex items-center justify-between px-4 py-3 rounded-xl hover:bg-gray-50 transition-colors group/item">
+                        <div className="flex items-center gap-4">
+                           <i className="fa-solid fa-user text-gray-400 group-hover/item:text-[#1a73e8] transition-colors"></i>
+                           <span className="text-[14px] font-semibold text-gray-700">My profile</span>
+                        </div>
+                        <i className="fa-solid fa-chevron-right text-[10px] text-gray-300"></i>
+                     </Link>
+
+                     <Link href="/bookings/puja" className="flex items-center justify-between px-4 py-3 rounded-xl hover:bg-gray-50 transition-colors group/item">
+                        <div className="flex items-center gap-4">
+                           <i className="fa-solid fa-calendar-check text-gray-400 group-hover/item:text-[#1a73e8] transition-colors"></i>
+                           <span className="text-[14px] font-semibold text-gray-700">My Puja Bookings</span>
+                        </div>
+                        <i className="fa-solid fa-chevron-right text-[10px] text-gray-300"></i>
+                     </Link>
+
+                     <Link href="/bookings/chadhava" className="flex items-center justify-between px-4 py-3 rounded-xl hover:bg-gray-50 transition-colors group/item">
+                        <div className="flex items-center gap-4">
+                           <i className="fa-solid fa-box-open text-gray-400 group-hover/item:text-[#1a73e8] transition-colors"></i>
+                           <span className="text-[14px] font-semibold text-gray-700">My Chadhava Bookings</span>
+                        </div>
+                        <i className="fa-solid fa-chevron-right text-[10px] text-gray-300"></i>
+                     </Link>
+
+                     <Link href="/puja" className="flex items-center justify-between px-4 py-3 rounded-xl hover:bg-gray-50 transition-colors group/item">
+                        <div className="flex items-center gap-4">
+                           <i className="fa-solid fa-om text-gray-400 group-hover/item:text-[#0e915f] transition-colors"></i>
+                           <span className="text-[14px] font-semibold text-gray-700">Book a Puja</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                           <span className="bg-[#00c26d] text-white text-[9px] font-bold px-1.5 py-0.5 rounded uppercase">New</span>
+                           <i className="fa-solid fa-chevron-right text-[10px] text-gray-300"></i>
+                        </div>
+                     </Link>
+
+                     <Link href="/chadhava" className="flex items-center justify-between px-4 py-3 rounded-xl hover:bg-gray-50 transition-colors group/item">
+                        <div className="flex items-center gap-4">
+                           <i className="fa-solid fa-hands-praying text-gray-400 group-hover/item:text-[#0e915f] transition-colors"></i>
+                           <span className="text-[14px] font-semibold text-gray-700">Book a Chadhava</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                           <span className="bg-[#00c26d] text-white text-[9px] font-bold px-1.5 py-0.5 rounded uppercase">New</span>
+                           <i className="fa-solid fa-chevron-right text-[10px] text-gray-300"></i>
+                        </div>
+                     </Link>
+
+                     <Link href="/astro-tools" className="flex items-center justify-between px-4 py-3 rounded-xl hover:bg-gray-50 transition-colors group/item">
+                        <div className="flex items-center gap-4">
+                           <i className="fa-solid fa-wand-magic-sparkles text-gray-400 group-hover/item:text-purple-600 transition-colors"></i>
+                           <span className="text-[14px] font-semibold text-gray-700">Astro Tools</span>
+                        </div>
+                        <i className="fa-solid fa-chevron-right text-[10px] text-gray-300"></i>
+                     </Link>
+
+                     <Link href="/store" className="flex items-center justify-between px-4 py-3 rounded-xl hover:bg-gray-50 transition-colors group/item">
+                        <div className="flex items-center gap-4">
+                           <i className="fa-solid fa-cart-shopping text-gray-400 group-hover/item:text-orange-500 transition-colors"></i>
+                           <span className="text-[14px] font-semibold text-gray-700">Store</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                           <span className="bg-[#00c26d] text-white text-[9px] font-bold px-1.5 py-0.5 rounded uppercase">New</span>
+                           <i className="fa-solid fa-chevron-right text-[10px] text-gray-300"></i>
+                        </div>
+                     </Link>
+                  </nav>
+               </div>
+
+               <div className="p-4 bg-gray-50/50 space-y-4">
+                   <p className="text-[11px] font-bold text-gray-400 uppercase tracking-widest">Help & Support</p>
+                   
+                   <div className="flex items-center gap-3 p-3 bg-white border border-gray-100 rounded-2xl">
+                      <div className="h-8 w-8 bg-green-50 text-green-600 rounded-full flex items-center justify-center text-sm">
+                         <i className="fa-solid fa-phone"></i>
+                      </div>
+                      <div>
+                         <p className="text-[13px] font-bold text-gray-900">080-711-74417</p>
+                         <p className="text-[10px] text-gray-400 font-medium tracking-tight">Available from 10:30 AM - 7:30 PM</p>
+                      </div>
+                   </div>
+
+                   <div className="grid grid-cols-2 gap-2">
+                      <a href="mailto:support@astroved.com" className="flex items-center justify-center gap-2 py-2.5 rounded-xl border border-gray-100 bg-white hover:bg-gray-50 transition-all">
+                         <i className="fa-regular fa-envelope text-red-500"></i>
+                         <span className="text-xs font-bold text-gray-700">Email us</span>
+                      </a>
+                      <a href="https://wa.me/918071174417" className="flex items-center justify-center gap-2 py-2.5 rounded-xl border border-gray-100 bg-white hover:bg-gray-50 transition-all">
+                         <i className="fa-brands fa-whatsapp text-green-500"></i>
+                         <span className="text-xs font-bold text-gray-700">Whatsapp</span>
+                      </a>
+                   </div>
+                   
+                   {user && (
+                      <button 
+                        onClick={handleLogout}
+                        className="w-full py-2.5 mt-2 text-xs font-bold text-red-500 hover:bg-red-50 rounded-xl transition-all"
+                      >
+                         <i className="fa-solid fa-power-off mr-2"></i> Log out from AstroVed
+                      </button>
+                   )}
+               </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
