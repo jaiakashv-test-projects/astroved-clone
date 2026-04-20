@@ -457,7 +457,7 @@ export function ReviewsSection() {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
-    fetch("/api/reviews")
+    fetch("c/api/reviews")
       .then(res => res.json())
       .then(data => {
         if (Array.isArray(data)) setReviews(data);

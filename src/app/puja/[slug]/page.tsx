@@ -675,7 +675,7 @@ export default function PujaDetailPage() {
                          value={userDetails.name}
                          onChange={(e) => setUserDetails(prev => ({ ...prev, name: e.target.value }))}
                          className="w-full bg-white border border-gray-100 rounded-2xl py-4 px-6 font-bold text-gray-900 outline-none shadow-sm focus:border-blue-500 transition-all"
-                         placeholder="ajay"
+                         placeholder="enter your name"
                        />
                        {userDetails.name && (
                           <button 
