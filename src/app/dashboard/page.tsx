@@ -74,7 +74,7 @@ export default function DashboardPage() {
 
       {/* Banner Section */}
       <section className="w-full">
-        <div className="relative h-[62vh] min-h-[360px] w-full overflow-hidden bg-black md:h-[78vh] lg:h-[88vh]">
+        <div className="relative h-125 w-full overflow-hidden">
           {banners.map((banner, index) => (
             <div
               key={banner.id}
@@ -83,14 +83,13 @@ export default function DashboardPage() {
               }`}
             >
               {banner.image ? (
-                <div className="relative h-full w-full bg-black">
+                <div className="relative h-full w-full">
                   <Image
                     src={banner.image}
                     alt={banner.title}
                     fill
-                    className="object-contain"
-                    sizes="100vw"
-                    priority={index === 0}
+                    className="object-cover"
+                    priority
                   />
                   {banner.showContent && (
                     <div className="absolute inset-0 flex flex-col items-center justify-center gap-6 bg-black/20 px-6 py-16 text-center">
