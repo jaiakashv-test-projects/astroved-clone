@@ -16,6 +16,7 @@ const navigationItems = [
 export default function Navbar() {
   const pathname = usePathname();
   const [user, setUser] = useState<{ name: string; email: string } | null>(null);
+   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     fetch("/api/auth/me")
@@ -30,20 +31,27 @@ export default function Navbar() {
       .catch(() => setUser(null));
   }, [pathname]);
 
+   useEffect(() => {
+      setMobileMenuOpen(false);
+   }, [pathname]);
+
+   const isActivePath = (path: string) => {
+      return pathname === path || (path !== "/dashboard" && pathname?.startsWith(path + "/"));
+   };
+
   const handleLogout = async () => {
     await fetch("/api/auth/logout", { method: "POST" });
     setUser(null);
     window.location.href = "/dashboard";
   };
 
-  return (
-    <section className="relative z-50 overflow-visible bg-white/95 backdrop-blur">
-      <div className="mx-auto grid max-w-6xl grid-cols-[1fr_auto] items-center gap-4 px-6 py-4 md:grid-cols-[1fr_auto_1fr]">
+   return (
+      <section className="sticky top-0 z-50 overflow-visible border-b border-[#d5d8f5] bg-white/95 shadow-sm backdrop-blur">
+         <div className="mx-auto grid max-w-6xl grid-cols-[1fr_auto] items-center gap-4 px-6 py-4 md:grid-cols-[1fr_auto_1fr]">
         <div className="justify-self-start">
           <p className="text-sm font-semibold uppercase tracking-[0.3em] text-[#6969fa]">
             AstroVed
           </p>
-          <h1 className="mt-1 text-xl font-semibold">Dashboard</h1>
         </div>
         <nav aria-label="Dashboard navigation" className="hidden md:block md:justify-self-center">
           <ul className="flex items-center gap-8 text-[15px] font-semibold text-[#1f1f1f]">
@@ -52,7 +60,7 @@ export default function Navbar() {
                 <Link
                   href={item.path}
                   className={
-                    (pathname === item.path || (item.path !== "/dashboard" && pathname?.startsWith(item.path + "/")))
+                              isActivePath(item.path)
                       ? "text-[#f47820]"
                       : "transition-colors hover:text-[#6969fa]"
                   }
@@ -63,8 +71,26 @@ export default function Navbar() {
             ))}
           </ul>
         </nav>
-        <div className="justify-self-end">
-          <div className="group relative">
+            <div className="justify-self-end flex items-center gap-2">
+               <button
+                  type="button"
+                  aria-label="Toggle menu"
+                  aria-expanded={mobileMenuOpen}
+                  onClick={() => setMobileMenuOpen((prev) => !prev)}
+                  className="flex h-11 w-11 items-center justify-center rounded-full border border-[#6969fa]/25 bg-white text-[#5a5add] shadow-sm transition-all duration-300 hover:border-[#6969fa]/50 hover:bg-[#f5f5ff] md:hidden"
+               >
+                  {mobileMenuOpen ? (
+                     <svg viewBox="0 0 24 24" fill="none" className="h-6 w-6" aria-hidden="true">
+                        <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                     </svg>
+                  ) : (
+                     <svg viewBox="0 0 24 24" fill="none" className="h-6 w-6" aria-hidden="true">
+                        <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                     </svg>
+                  )}
+               </button>
+
+               <div className="group relative hidden md:block">
             <button
               type="button"
               aria-label="Account menu"
@@ -223,6 +249,66 @@ export default function Navbar() {
           </div>
         </div>
       </div>
+
+         <div
+            className={`mx-auto max-w-6xl overflow-hidden px-6 transition-all duration-300 md:hidden ${
+               mobileMenuOpen ? "max-h-[80vh] pb-4" : "max-h-0"
+            }`}
+         >
+            <div className="rounded-2xl border border-gray-100 bg-white p-3 shadow-sm">
+               <nav aria-label="Mobile navigation">
+                  <ul className="space-y-1">
+                     {navigationItems.map((item) => (
+                        <li key={`mobile-${item.label}`}>
+                           <Link
+                              href={item.path}
+                              className={`block rounded-xl px-4 py-3 text-sm font-semibold transition-colors ${
+                                 isActivePath(item.path)
+                                    ? "bg-[#f47820]/10 text-[#f47820]"
+                                    : "text-gray-700 hover:bg-gray-50"
+                              }`}
+                           >
+                              {item.label}
+                           </Link>
+                        </li>
+                     ))}
+                  </ul>
+               </nav>
+
+               <div className="mt-3 border-t border-gray-100 pt-3">
+                  {user ? (
+                     <>
+                        <p className="px-2 text-xs font-bold uppercase tracking-wider text-[#0e915f]">Namaste, {user.name}</p>
+                        <div className="mt-2 space-y-1">
+                           <Link href="/profile" className="block rounded-xl px-4 py-3 text-sm font-semibold text-gray-700 hover:bg-gray-50">
+                              My Profile
+                           </Link>
+                           <Link href="/bookings/puja" className="block rounded-xl px-4 py-3 text-sm font-semibold text-gray-700 hover:bg-gray-50">
+                              My Puja Bookings
+                           </Link>
+                           <Link href="/bookings/chadhava" className="block rounded-xl px-4 py-3 text-sm font-semibold text-gray-700 hover:bg-gray-50">
+                              My Chadhava Bookings
+                           </Link>
+                           <button
+                              type="button"
+                              onClick={handleLogout}
+                              className="w-full rounded-xl px-4 py-3 text-left text-sm font-semibold text-red-600 transition-colors hover:bg-red-50"
+                           >
+                              Log out
+                           </button>
+                        </div>
+                     </>
+                  ) : (
+                     <Link
+                        href="/auth/login"
+                        className="block w-full rounded-xl bg-[#1a73e8] px-4 py-3 text-center text-sm font-bold text-white shadow-md shadow-blue-100 transition-all hover:bg-[#1557b0]"
+                     >
+                        Login / Create an account
+                     </Link>
+                  )}
+               </div>
+            </div>
+         </div>
     </section>
   );
 }
