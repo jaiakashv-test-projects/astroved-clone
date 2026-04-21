@@ -599,6 +599,7 @@ const PujaCard = ({ puja }: { puja: Puja }) => (
 export function PujaCardsSection() {
   const [pujas, setPujas] = useState<Puja[]>([]);
   const pujaScrollRef = useRef<HTMLDivElement>(null);
+  const touchStartXRef = useRef<number | null>(null);
   const [currentPujaIndex, setCurrentPujaIndex] = useState(0);
 
   useEffect(() => {
@@ -636,7 +637,24 @@ export function PujaCardsSection() {
     <div className="flex flex-col items-center">
       <div
         ref={pujaScrollRef}
-        className="flex w-full gap-6 overflow-x-auto pb-6 snap-x snap-mandatory no-scrollbar"
+        className="flex w-full gap-6 overflow-x-auto pb-6 snap-x snap-mandatory no-scrollbar touch-pan-x"
+        onTouchStart={(event) => {
+          touchStartXRef.current = event.changedTouches[0]?.clientX ?? null;
+        }}
+        onTouchEnd={(event) => {
+          const startX = touchStartXRef.current;
+          if (startX === null) return;
+
+          const endX = event.changedTouches[0]?.clientX ?? startX;
+          const deltaX = startX - endX;
+          const swipeThreshold = 45;
+
+          if (Math.abs(deltaX) > swipeThreshold) {
+            handlePujaScroll(deltaX > 0 ? "right" : "left");
+          }
+
+          touchStartXRef.current = null;
+        }}
         onScroll={(event) => {
           const index = Math.round(event.currentTarget.scrollLeft / cardStep);
           if (index !== currentPujaIndex) {
@@ -654,7 +672,11 @@ export function PujaCardsSection() {
       <div className="mt-4 flex items-center justify-center gap-5">
         <button
           onClick={() => handlePujaScroll("left")}
-          className="h-11 w-11 rounded-full border border-gray-200 bg-white text-gray-700 shadow-sm transition hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
+          className={`h-11 w-11 rounded-full shadow-sm transition disabled:cursor-not-allowed ${
+            currentPujaIndex === 0
+              ? "border border-gray-200 bg-white text-gray-400 opacity-60"
+              : "bg-[#6969fa] text-white hover:bg-[#5555e8]"
+          }`}
           aria-label="Previous puja"
           disabled={currentPujaIndex === 0}
         >
@@ -683,7 +705,11 @@ export function PujaCardsSection() {
 
         <button
           onClick={() => handlePujaScroll("right")}
-          className="h-11 w-11 rounded-full bg-[#6969fa] text-white shadow-sm transition hover:bg-[#5555e8] disabled:cursor-not-allowed disabled:opacity-50"
+          className={`h-11 w-11 rounded-full shadow-sm transition disabled:cursor-not-allowed ${
+            currentPujaIndex === pujas.length - 1
+              ? "border border-gray-200 bg-white text-gray-400 opacity-60"
+              : "bg-[#6969fa] text-white hover:bg-[#5555e8]"
+          }`}
           aria-label="Next puja"
           disabled={currentPujaIndex === pujas.length - 1}
         >
