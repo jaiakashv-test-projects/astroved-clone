@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Navbar from "@/components/layout/Navbar";
 
 const navigationItems = [
@@ -453,7 +453,7 @@ const ReviewCard = ({ review }: { review: Review }) => {
 export function ReviewsSection() {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
-  const scrollRef = React.useRef<HTMLDivElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
@@ -554,62 +554,148 @@ export function ReviewsSection() {
   );
 }
 
+// --- Dynamic Puja Cards Section ---
+type Puja = {
+  _id: string;
+  title: string;
+  subtitle: string;
+  description: string;
+  imageUrl: string;
+  buttonText: string;
+  slug?: string;
+};
 
-  // --- Dynamic Puja Cards Section ---
-  import React from "react";
+const PujaCard = ({ puja }: { puja: Puja }) => (
+  <div className="bg-white rounded-2xl shadow-lg overflow-hidden flex h-full flex-col hover:shadow-2xl transition-all duration-300 border border-gray-100">
+    <div className="relative h-60 w-full overflow-hidden">
+      <img
+        src={puja.imageUrl || "https://images.unsplash.com/photo-1601024445121-e5b82f020549?auto=format&fit=crop&w=800&q=80"}
+        alt={puja.title}
+        className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
+      />
+    </div>
+    <div className="p-6 flex flex-col flex-1 text-center">
+      <p className="text-[#f47820] text-sm font-bold uppercase tracking-wider mb-2">{puja.subtitle}</p>
+      <h3 className="text-xl font-bold text-gray-900 mb-3">{puja.title}</h3>
+      <p className="text-gray-600 text-sm line-clamp-3 mb-6 flex-1">{puja.description}</p>
+      <Link
+        href={`/puja/${
+          puja.slug ||
+          String(puja.title || "")
+            .toLowerCase()
+            .trim()
+            .replace(/[^a-z0-9\s-]/g, "")
+            .replace(/\s+/g, "-")
+            .replace(/-+/g, "-")
+        }`}
+        className="w-full bg-gradient-to-r from-[#6969fa] to-[#5555e8] text-white font-bold py-3 rounded-xl shadow-md hover:shadow-lg transition-all active:scale-95 text-center block"
+      >
+        {puja.buttonText || "Book Now"}
+      </Link>
+    </div>
+  </div>
+);
 
-  type Puja = {
-    _id: string;
-    title: string;
-    subtitle: string;
-    description: string;
-    imageUrl: string;
-    buttonText: string;
-    slug?: string;
+export function PujaCardsSection() {
+  const [pujas, setPujas] = useState<Puja[]>([]);
+  const pujaScrollRef = useRef<HTMLDivElement>(null);
+  const [currentPujaIndex, setCurrentPujaIndex] = useState(0);
+
+  useEffect(() => {
+    fetch("/api/special-pujas")
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data)) {
+          setPujas(data);
+        }
+      });
+  }, []);
+
+  const cardStep = 392;
+
+  const handlePujaScroll = (direction: "left" | "right") => {
+    if (!pujaScrollRef.current || pujas.length <= 1) {
+      return;
+    }
+
+    const nextIndex =
+      direction === "left"
+        ? Math.max(0, currentPujaIndex - 1)
+        : Math.min(pujas.length - 1, currentPujaIndex + 1);
+
+    pujaScrollRef.current.scrollTo({
+      left: nextIndex * cardStep,
+      behavior: "smooth",
+    });
+    setCurrentPujaIndex(nextIndex);
   };
 
-  const PujaCard = ({ puja }: { puja: Puja }) => (
-    <div className="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col hover:shadow-2xl transition-all duration-300 border border-gray-100">
-      <div className="relative h-60 w-full overflow-hidden">
-        <img 
-          src={puja.imageUrl || "https://images.unsplash.com/photo-1601024445121-e5b82f020549?auto=format&fit=crop&w=800&q=80"} 
-          alt={puja.title} 
-          className="w-full h-full object-fit transition-transform duration-500 hover:scale-110" 
-        />
+  if (!pujas.length) return null;
+
+  return (
+    <div className="flex flex-col items-center">
+      <div
+        ref={pujaScrollRef}
+        className="flex w-full gap-6 overflow-x-auto pb-6 snap-x snap-mandatory no-scrollbar"
+        onScroll={(event) => {
+          const index = Math.round(event.currentTarget.scrollLeft / cardStep);
+          if (index !== currentPujaIndex) {
+            setCurrentPujaIndex(index);
+          }
+        }}
+      >
+        {pujas.map((puja) => (
+          <div key={puja._id} className="min-w-[300px] md:min-w-[368px] max-w-[368px] snap-center">
+            <PujaCard puja={puja} />
+          </div>
+        ))}
       </div>
-      <div className="p-6 flex flex-col flex-1 text-center">
-        <p className="text-[#f47820] text-sm font-bold uppercase tracking-wider mb-2">{puja.subtitle}</p>
-        <h3 className="text-xl font-bold text-gray-900 mb-3">{puja.title}</h3>
-        <p className="text-gray-600 text-sm line-clamp-3 mb-6 flex-1">{puja.description}</p>
-        <Link href={`/puja/${puja.slug || String(puja.title || '').toLowerCase().trim().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-')}`} className="w-full bg-gradient-to-r from-[#6969fa] to-[#5555e8] text-white font-bold py-3 rounded-xl shadow-md hover:shadow-lg transition-all active:scale-95 text-center block">
-          {puja.buttonText || "Book Now"}
+
+      <div className="mt-4 flex items-center justify-center gap-5">
+        <button
+          onClick={() => handlePujaScroll("left")}
+          className="h-11 w-11 rounded-full border border-gray-200 bg-white text-gray-700 shadow-sm transition hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
+          aria-label="Previous puja"
+          disabled={currentPujaIndex === 0}
+        >
+          <span aria-hidden="true">&lt;</span>
+        </button>
+
+        <div className="flex gap-2">
+          {pujas.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => {
+                if (!pujaScrollRef.current) return;
+                pujaScrollRef.current.scrollTo({
+                  left: index * cardStep,
+                  behavior: "smooth",
+                });
+                setCurrentPujaIndex(index);
+              }}
+              className={`h-2 rounded-full transition-all ${
+                index === currentPujaIndex ? "w-8 bg-[#6969fa]" : "w-2 bg-[#cbd5e1]"
+              }`}
+              aria-label={`Go to puja ${index + 1}`}
+            />
+          ))}
+        </div>
+
+        <button
+          onClick={() => handlePujaScroll("right")}
+          className="h-11 w-11 rounded-full bg-[#6969fa] text-white shadow-sm transition hover:bg-[#5555e8] disabled:cursor-not-allowed disabled:opacity-50"
+          aria-label="Next puja"
+          disabled={currentPujaIndex === pujas.length - 1}
+        >
+          <span aria-hidden="true">&gt;</span>
+        </button>
+      </div>
+
+      <div className="mt-12">
+        <Link href="/puja" className="text-[#6969fa] text-xl hover:text-[#5555e8] transition-all flex items-center gap-2 group">
+          view all pujas <span className="group-hover:translate-x-2 transition-transform">-&gt;</span>
         </Link>
       </div>
     </div>
   );
-
-  export function PujaCardsSection() {
-    const [pujas, setPujas] = React.useState<Puja[]>([]);
-    React.useEffect(() => {
-      fetch("/api/special-pujas")
-        .then((res) => res.json())
-        .then((data) => setPujas(data));
-    }, []);
-    if (!pujas.length) return null;
-    return (
-      <div className="flex flex-col items-center">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full">
-          {pujas.map((puja) => (
-            <PujaCard key={puja._id} puja={puja} />
-          ))}
-        </div>
-        <div className="mt-12">
-          <Link href="/puja" className="text-[#6969fa] text-xl hover:text-[#5555e8] transition-all flex items-center gap-2 group">
-            view all pujas <span className="group-hover:translate-x-2 transition-transform">→</span>
-          </Link>
-        </div>
-      </div>
-    );
-  }
-
-  // Insert the PujaCardsSection below the filters and input
+}
