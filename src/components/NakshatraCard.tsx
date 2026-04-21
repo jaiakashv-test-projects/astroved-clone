@@ -55,7 +55,8 @@ const FIELD_ORDER: Array<{ label: string; key: keyof NakshatraResponse }> = [
 
 export default function NakshatraCard({ hideHeader = false }: NakshatraCardProps) {
   const [name, setName] = useState("");
-  const [date, setDate] = useState("");
+  const [dob, setDob] = useState("");
+  const [time, setTime] = useState("");
   const [data, setData] = useState<NakshatraResponse | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -81,8 +82,13 @@ export default function NakshatraCard({ hideHeader = false }: NakshatraCardProps
       return;
     }
 
-    if (!date) {
-      setError("Please select date and time.");
+    if (!dob) {
+      setError("Please select date of birth.");
+      return;
+    }
+
+    if (!time) {
+      setError("Please select birth time.");
       return;
     }
 
@@ -94,7 +100,7 @@ export default function NakshatraCard({ hideHeader = false }: NakshatraCardProps
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ date }),
+        body: JSON.stringify({ date: `${dob}T${time}` }),
       });
 
       const result = (await response.json()) as NakshatraResponse | { error?: string };
@@ -128,23 +134,54 @@ export default function NakshatraCard({ hideHeader = false }: NakshatraCardProps
       )}
 
       <form onSubmit={fetchNakshatra} className={`${hideHeader ? "mt-0" : "mt-5"} space-y-3`}>
-        <input
-          type="text"
-          value={name}
-          onChange={(event) => setName(event.target.value)}
-          className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none transition focus:border-green-500 focus:ring-2 focus:ring-green-100"
-          placeholder="Enter your name"
-          aria-label="Name"
-          required
-        />
-        <input
-          type="datetime-local"
-          value={date}
-          onChange={(event) => setDate(event.target.value)}
-          className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none transition focus:border-green-500 focus:ring-2 focus:ring-green-100"
-          aria-label="Date and time"
-          required
-        />
+        <div>
+          <label htmlFor="nakshatra-name" className="mb-1 block text-sm font-semibold text-gray-700">
+            Name
+          </label>
+          <input
+            id="nakshatra-name"
+            type="text"
+            value={name}
+            onChange={(event) => setName(event.target.value)}
+            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none transition focus:border-green-500 focus:ring-2 focus:ring-green-100"
+            placeholder="Enter your name"
+            aria-label="Name"
+            required
+          />
+        </div>
+
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <div>
+            <label htmlFor="nakshatra-dob" className="mb-1 block text-sm font-semibold text-gray-700">
+              DOB
+            </label>
+            <input
+              id="nakshatra-dob"
+              type="date"
+              value={dob}
+              onChange={(event) => setDob(event.target.value)}
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none transition focus:border-green-500 focus:ring-2 focus:ring-green-100"
+              aria-label="Date of birth"
+              required
+            />
+          </div>
+
+          <div>
+            <label htmlFor="nakshatra-time" className="mb-1 block text-sm font-semibold text-gray-700">
+              Time
+            </label>
+            <input
+              id="nakshatra-time"
+              type="time"
+              value={time}
+              onChange={(event) => setTime(event.target.value)}
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none transition focus:border-green-500 focus:ring-2 focus:ring-green-100"
+              aria-label="Birth time"
+              required
+            />
+          </div>
+        </div>
+
         <button
           type="submit"
           disabled={loading}
