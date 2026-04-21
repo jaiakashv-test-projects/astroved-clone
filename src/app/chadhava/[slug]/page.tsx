@@ -241,7 +241,7 @@ export default function ChadhavaDetailPage() {
                       }
 
                       // Proceed to payment
-                      window.location.href = `/payment?amount=${selectedTotal}&type=chadhava`;
+                      window.location.href = `/payment?amount=${selectedTotal}&type=chadhava&title=${encodeURIComponent(data.title)}`;
                    } catch (err) {
                       console.error(err);
                       alert("Authentication error. Please try again.");

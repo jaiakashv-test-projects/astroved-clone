@@ -6,7 +6,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   try {
     const client = await clientPromise;
     const db = client.db();
-    const collection = db.collection('special-pujas');
+    const collection = db.collection('puja');
 
     if (req.method === 'POST') {
       const puja = req.body;
@@ -14,7 +14,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const result = await collection.insertOne(puja);
       return res.status(201).json({ insertedId: result.insertedId, ...puja });
     } else if (req.method === 'GET') {
-      const pujas = await collection.find({}).toArray();
+      // Find pujas that have a badge indicating it's a special puja
+      const pujas = await collection.find({ badge: { $regex: /special/i } }).toArray();
       return res.status(200).json(pujas);
     } else if (req.method === 'DELETE') {
       const { id } = req.query;

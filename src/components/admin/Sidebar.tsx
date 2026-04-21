@@ -17,7 +17,6 @@ import { useRouter } from "next/navigation";
 
 const menuItems = [
   { name: "Dashboard", href: "/admin", icon: HomeIcon },
-  { name: "Special Pujas", href: "/admin/special-pujas", icon: SparklesIcon },
   { name: "Pujas", href: "/admin/pujas", icon: SparklesIcon },
   { name: "Chadhava", href: "/admin/chadhava", icon: ShoppingBagIcon },
   { name: "Panchang", href: "/admin/panchang", icon: CalendarIcon },

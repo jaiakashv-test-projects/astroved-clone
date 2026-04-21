@@ -565,6 +565,7 @@ export function ReviewsSection() {
     description: string;
     imageUrl: string;
     buttonText: string;
+    slug?: string;
   };
 
   const PujaCard = ({ puja }: { puja: Puja }) => (
@@ -580,9 +581,9 @@ export function ReviewsSection() {
         <p className="text-[#f47820] text-sm font-bold uppercase tracking-wider mb-2">{puja.subtitle}</p>
         <h3 className="text-xl font-bold text-gray-900 mb-3">{puja.title}</h3>
         <p className="text-gray-600 text-sm line-clamp-3 mb-6 flex-1">{puja.description}</p>
-        <button className="w-full bg-gradient-to-r from-[#6969fa] to-[#5555e8] text-white font-bold py-3 rounded-xl shadow-md hover:shadow-lg transition-all active:scale-95">
+        <Link href={`/puja/${puja.slug || String(puja.title || '').toLowerCase().trim().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-')}`} className="w-full bg-gradient-to-r from-[#6969fa] to-[#5555e8] text-white font-bold py-3 rounded-xl shadow-md hover:shadow-lg transition-all active:scale-95 text-center block">
           {puja.buttonText || "Book Now"}
-        </button>
+        </Link>
       </div>
     </div>
   );

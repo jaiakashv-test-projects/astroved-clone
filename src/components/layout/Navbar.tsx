@@ -88,8 +88,9 @@ export default function Navbar() {
             </button>
             
             {/* Redesigned Dropdown */}
-            <div className="pointer-events-none absolute right-0 top-full z-[80] mt-2 w-[320px] rounded-2xl border border-gray-100 bg-white shadow-[0_20px_50px_rgba(0,0,0,0.1)] opacity-0 transition-all duration-300 group-hover:pointer-events-auto group-hover:translate-y-2 group-hover:opacity-100 overflow-hidden">
-               {!user ? (
+            <div className="pointer-events-none absolute right-0 top-full z-[80] w-[320px] pt-3 opacity-0 translate-y-3 transition-all duration-300 group-hover:pointer-events-auto group-hover:translate-y-0 group-hover:opacity-100">
+               <div className="rounded-2xl border border-gray-100 bg-white shadow-[0_20px_50px_rgba(0,0,0,0.1)] overflow-hidden">
+                 {!user ? (
                  <div className="p-5 border-b border-gray-50 bg-gray-50/30">
                     <p className="text-[13px] text-gray-500 font-medium mb-3">To check all available pujas & offers:</p>
                     <Link 
@@ -117,7 +118,7 @@ export default function Navbar() {
                   <p className="px-4 py-2 text-[11px] font-bold text-gray-400 uppercase tracking-widest">Account Details</p>
                   
                   <nav className="space-y-0.5">
-                     <Link href="/profile" className="flex items-center justify-between px-4 py-3 rounded-xl hover:bg-gray-50 transition-colors group/item">
+                     <Link href={user ? "/profile" : "/auth/login"} className="flex items-center justify-between px-4 py-3 rounded-xl hover:bg-gray-50 transition-colors group/item">
                         <div className="flex items-center gap-4">
                            <i className="fa-solid fa-user text-gray-400 group-hover/item:text-[#1a73e8] transition-colors"></i>
                            <span className="text-[14px] font-semibold text-gray-700">My profile</span>
@@ -125,7 +126,7 @@ export default function Navbar() {
                         <i className="fa-solid fa-chevron-right text-[10px] text-gray-300"></i>
                      </Link>
 
-                     <Link href="/bookings/puja" className="flex items-center justify-between px-4 py-3 rounded-xl hover:bg-gray-50 transition-colors group/item">
+                     <Link href={user ? "/bookings/puja" : "/auth/login"} className="flex items-center justify-between px-4 py-3 rounded-xl hover:bg-gray-50 transition-colors group/item">
                         <div className="flex items-center gap-4">
                            <i className="fa-solid fa-calendar-check text-gray-400 group-hover/item:text-[#1a73e8] transition-colors"></i>
                            <span className="text-[14px] font-semibold text-gray-700">My Puja Bookings</span>
@@ -133,7 +134,7 @@ export default function Navbar() {
                         <i className="fa-solid fa-chevron-right text-[10px] text-gray-300"></i>
                      </Link>
 
-                     <Link href="/bookings/chadhava" className="flex items-center justify-between px-4 py-3 rounded-xl hover:bg-gray-50 transition-colors group/item">
+                     <Link href={user ? "/bookings/chadhava" : "/auth/login"} className="flex items-center justify-between px-4 py-3 rounded-xl hover:bg-gray-50 transition-colors group/item">
                         <div className="flex items-center gap-4">
                            <i className="fa-solid fa-box-open text-gray-400 group-hover/item:text-[#1a73e8] transition-colors"></i>
                            <span className="text-[14px] font-semibold text-gray-700">My Chadhava Bookings</span>
@@ -216,6 +217,7 @@ export default function Navbar() {
                          <i className="fa-solid fa-power-off mr-2"></i> Log out from AstroVed
                       </button>
                    )}
+               </div>
                </div>
             </div>
           </div>

@@ -30,6 +30,7 @@ export async function POST(request: Request) {
       customerName: payload.name,
       customerEmail: payload.email,
       bookingType: bookingData.type || 'puja', // 'puja' or 'chadhava'
+      title: bookingData.title || (bookingData.type === 'chadhava' ? 'Spiritual Chadhava' : 'Sacred Puja Service'),
       amount: bookingData.amount,
       items: bookingData.items || [],
       status: 'success',

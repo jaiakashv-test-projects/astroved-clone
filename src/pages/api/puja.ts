@@ -91,8 +91,8 @@ const normalizeOfferings = (items: unknown) => {
   });
 };
 
-const slugify = (value: string) =>
-  value
+const slugify = (value: any) =>
+  String(value || '')
     .toLowerCase()
     .trim()
     .replace(/[^a-z0-9\s-]/g, '')
@@ -437,12 +437,13 @@ const fallbackPujas: PujaRecord[] = [
 
 const normalizePuja = (puja: PujaRecord) => ({
   ...puja,
-  _id: puja._id ? String(puja._id) : slugify(puja.title),
+  title: puja.title || 'Untitled Puja',
+  _id: puja._id ? String(puja._id) : slugify(puja.title || 'Untitled Puja'),
   buttonText: puja.buttonText || 'Participate',
   imageUrl:
     puja.imageUrl ||
     'https://images.unsplash.com/photo-1542909168-82c3e7fdca5c?auto=format&fit=crop&w=1600&q=80',
-  slug: puja.slug || slugify(puja.title),
+  slug: puja.slug || slugify(puja.title || 'Untitled Puja'),
   eventDateTime: getStringField(puja, 'eventDateTime') || undefined,
   details: (() => {
     const flatDetails = {

@@ -11,6 +11,7 @@ interface Booking {
   bookingDate: string;
   status: string;
   bookingType: string;
+  title?: string;
 }
 
 export default function MyPujaBookings() {
@@ -76,7 +77,7 @@ export default function MyPujaBookings() {
                               <span className="text-[10px] font-bold bg-green-50 text-green-600 px-2 py-0.5 rounded uppercase tracking-wider">Confirmed</span>
                               <span className="text-[10px] font-bold text-gray-400">Order ID: {booking.orderId}</span>
                            </div>
-                           <h3 className="text-lg font-bold text-gray-900 uppercase">Sacred Puja Service</h3>
+                           <h3 className="text-lg font-bold text-gray-900 uppercase">{booking.title || 'Sacred Puja Service'}</h3>
                            <p className="text-xs text-gray-400 font-medium">Booked on {new Date(booking.bookingDate).toLocaleDateString()} at {new Date(booking.bookingDate).toLocaleTimeString()}</p>
                         </div>
                      </div>

@@ -329,13 +329,22 @@ export default function PujaDetailPage() {
                     <p className="mt-2 text-xs font-semibold text-[#b45309]">This puja has started or completed.</p>
                   ) : null}
 
-                  <button 
-                    onClick={() => setShowPackageModal(true)}
-                    className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-md bg-[#0e915f] px-4 py-3 text-sm font-semibold text-white hover:bg-[#0b7c50]"
-                  >
-                    Select your package
-                    <ClockIcon className="h-4 w-4" />
-                  </button>
+                  {countdown.expired ? (
+                    <button 
+                      disabled
+                      className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-md bg-gray-400 px-4 py-3 text-sm font-semibold text-white cursor-not-allowed"
+                    >
+                      Puja is Over
+                    </button>
+                  ) : (
+                    <button 
+                      onClick={() => setShowPackageModal(true)}
+                      className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-md bg-[#0e915f] px-4 py-3 text-sm font-semibold text-white hover:bg-[#0b7c50]"
+                    >
+                      Select your package
+                      <ClockIcon className="h-4 w-4" />
+                    </button>
+                  )}
                 </div>
               </div>
             </section>
@@ -860,7 +869,7 @@ export default function PujaDetailPage() {
                  <button 
                    onClick={() => {
                       const extras = selectedExtraIds.join(',');
-                      window.location.href = `/payment?amount=${totalAmount}&type=puja&pkg=${selectedPackageId}&name=${encodeURIComponent(userDetails.name)}&wa=${userDetails.whatsapp}&extras=${extras}`;
+                      window.location.href = `/payment?amount=${totalAmount}&type=puja&pkg=${selectedPackageId}&name=${encodeURIComponent(userDetails.name)}&wa=${userDetails.whatsapp}&extras=${extras}&title=${encodeURIComponent(puja.title)}`;
                    }}
                    className="flex items-center gap-2 font-bold hover:gap-4 transition-all uppercase tracking-widest text-sm"
                  >

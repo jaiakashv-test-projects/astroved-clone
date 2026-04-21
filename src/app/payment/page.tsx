@@ -32,6 +32,7 @@ function PaymentContent() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           type: searchParams?.get("type") || "puja",
+          title: searchParams?.get("title") || "",
           amount: amount,
           orderId: orderId,
           items: [] // In real app, pass items from cart
