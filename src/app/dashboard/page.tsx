@@ -24,7 +24,7 @@ const banners = [
     buttonText: "Download Now",
     bgColor: "bg-gradient-to-r from-[#6969fa] to-[#5555e8]",
     textColor: "text-white",
-    image: "https://imgs.search.brave.com/1U6BKPQzz6ayNBU1oIDk8ApPOoz9yJhwJgpo-tGfrVU/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdGF0/aWMudmVjdGVlenku/Y29tL3N5c3RlbS9y/ZXNvdXJjZXMvdGh1/bWJuYWlscy8wNTMv/ODg5LzY1Ny9zbWFs/bC9kb3dubG9hZC1v/dXItYXBwLXNtYXJ0/cGhvbmUtcXItY29k/ZS1iYW5uZXItbW9j/a3VwLWlsbHVzdHJh/dGlvbi12ZWN0b3Iu/anBn",
+    image: "https://phplexus.astroved.com/wp-content/uploads/2026/04/VASAVI-JAYANTHI-desk-2.jpg",
   },
   {
     id: 2,
@@ -33,7 +33,7 @@ const banners = [
     buttonText: "Book Now",
     bgColor: "bg-gradient-to-r from-[#f47820] to-[#e85e00]",
     textColor: "text-white",
-    image:"https://imgs.search.brave.com/Eq0XDfmlfc6kzHfiAfquoath4sbb1XuxWBFb87N7bwU/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9waHBs/ZXh1cy5hc3Ryb3Zl/ZC5jb20vd3AtY29u/dGVudC91cGxvYWRz/LzIwMjQvMDkvTmF2/YWdyYWhhLTQtMS5q/cGc",
+    image:"https://phplexus.astroved.com/wp-content/uploads/2026/04/brahmahatya-dosha-3.jpg",
   },
   {
     id: 3,
@@ -42,7 +42,7 @@ const banners = [
     buttonText: "Book Chadhava",
     bgColor: "bg-gradient-to-r from-[#6969fa] via-[#f47820] to-[#6969fa]",
     textColor: "text-white",
-    image: "https://imgs.search.brave.com/h9wjhKSUpUMNhZAxpkSj68IjN3kEhPAOrJA5nks9tf4/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly92ZWRh/bWZvdW5kYXRpb24u/Y29tL3dwLWNvbnRl/bnQvdXBsb2Fkcy8y/MDI0LzEwL2ltZ19z/aG93Y2FzZV9zZWN0/aW9uX2ZhbWlseS53/ZWJw",
+    image: "https://phplexus.astroved.com/wp-content/uploads/2026/04/Dasa-Pratyangira-desk-1.jpg",
   },
   {
     id: 4,
