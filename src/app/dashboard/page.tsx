@@ -24,7 +24,8 @@ const banners = [
     buttonText: "Download Now",
     bgColor: "bg-gradient-to-r from-[#6969fa] to-[#5555e8]",
     textColor: "text-white",
-    image: "https://phplexus.astroved.com/wp-content/uploads/2026/04/VASAVI-JAYANTHI-desk-2.jpg",
+    image: "/images/Ganesh-Chaturthi-Mahapuja.jpg",
+    className:"object-cover",
   },
   {
     id: 2,
@@ -33,7 +34,7 @@ const banners = [
     buttonText: "Book Now",
     bgColor: "bg-gradient-to-r from-[#f47820] to-[#e85e00]",
     textColor: "text-white",
-    image:"https://phplexus.astroved.com/wp-content/uploads/2026/04/brahmahatya-dosha-3.jpg",
+    image:"/images/Navagraha-Shanti-Puja.jpg",
   },
   {
     id: 3,
@@ -42,7 +43,7 @@ const banners = [
     buttonText: "Book Chadhava",
     bgColor: "bg-gradient-to-r from-[#6969fa] via-[#f47820] to-[#6969fa]",
     textColor: "text-white",
-    image: "https://phplexus.astroved.com/wp-content/uploads/2026/04/Dasa-Pratyangira-desk-1.jpg",
+    image: "/images/Lakshmi-Homam.jpg",
   },
   {
     id: 4,
@@ -51,7 +52,7 @@ const banners = [
     buttonText: "",
     bgColor: "bg-white",
     textColor: "text-[#1f1f1f]",
-    image: "https://phplexus.astroved.com/wp-content/uploads/2026/04/Akshaya-Tritiya-Desk-2.jpg",
+    image: "/images/maa-kali.jpg",
     showContent: false,
   },
 ];
@@ -74,7 +75,7 @@ export default function DashboardPage() {
 
       {/* Banner Section */}
       <section className="w-full">
-        <div className="relative h-125 w-full overflow-hidden">
+       <div className="relative w-full aspect-[16/9] md:aspect-[21/9] overflow-hidden">
           {banners.map((banner, index) => (
             <div
               key={banner.id}
@@ -88,7 +89,8 @@ export default function DashboardPage() {
                     src={banner.image}
                     alt={banner.title}
                     fill
-                    className="object-cover"
+                    className="object-cover object-top" 
+                  
                     priority
                   />
                   {banner.showContent && (
