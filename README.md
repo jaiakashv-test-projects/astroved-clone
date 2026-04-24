@@ -1,36 +1,177 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Astroved Project Overview
 
-## Getting Started
+## Purpose
 
-First, run the development server:
+This project is a **Next.js-based spiritual services platform**. It appears to support:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- temples
+- pujas
+- chadhava offerings
+- astrologers
+- panchang
+- consultation booking
+- payments
+- user authentication
+- an admin dashboard for content management
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## End-to-End Flow
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. **User visits the homepage**
+   - Main landing page is in `src/app/page.tsx`
+   - It likely shows featured services and navigation
 
-## Learn More
+2. **User browses services**
+   - Public pages include:
+     - temples
+     - puja
+     - chadhava
+     - astrologers
+     - library
+     - store
+     - panchang
+     - astro tools
 
-To learn more about Next.js, take a look at the following resources:
+3. **User opens a detail page**
+   - Dynamic routes are used for:
+     - `src/app/puja/[slug]/page.tsx`
+     - `src/app/chadhava/[slug]/page.tsx`
+     - `src/app/astrologers/[id]/page.tsx`
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+4. **User logs in or signs up**
+   - Authentication pages are in:
+     - `src/app/auth/login/page.tsx`
+     - `src/app/auth/signup/page.tsx`
+     - `src/app/auth/forgot-password/page.tsx`
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+5. **User books a service**
+   - Booking UI is likely handled by:
+     - `src/components/booking/BookingForm.tsx`
+     - `src/components/booking/PaymentSection.tsx`
+   - Booking APIs are in:
+     - `src/app/api/bookings/create/route.ts`
+     - `src/app/api/bookings/me/route.ts`
 
-## Deploy on Vercel
+6. **User checks profile or dashboard**
+   - Relevant pages:
+     - `src/app/profile/page.tsx`
+     - `src/app/dashboard/page.tsx`
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+7. **Admin manages content**
+   - Admin area is under:
+     - `src/app/admin/`
+   - Admin APIs are in:
+     - `src/app/api/admin/*`
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## Folder Structure Summary
+
+### `public/`
+Static assets such as SVG icons and images.
+
+### `src/app/`
+Main application routes using the App Router.
+
+#### Public pages
+- `page.tsx` → homepage
+- `temples/page.tsx`
+- `panchang/page.tsx`
+- `store/page.tsx`
+- `library/page.tsx`
+- `astro-tools/page.tsx`
+- `consultation/page.tsx`
+- `booking/page.tsx`
+- `payment/page.tsx`
+- `profile/page.tsx`
+- `dashboard/page.tsx`
+
+#### Service detail pages
+- `chadhava/[slug]/page.tsx`
+- `puja/[slug]/page.tsx`
+- `astrologers/[id]/page.tsx`
+
+#### Authentication pages
+- `auth/login/page.tsx`
+- `auth/signup/page.tsx`
+- `auth/forgot-password/page.tsx`
+
+#### Admin pages
+- `admin/page.tsx`
+- `admin/login/page.tsx`
+- `admin/pujas/page.tsx`
+- `admin/temples/page.tsx`
+- `admin/store/page.tsx`
+- `admin/reviews/page.tsx`
+- `admin/chadhava/page.tsx`
+- `admin/library/page.tsx`
+- `admin/panchang/page.tsx`
+- `admin/astro-tools/page.tsx`
+
+### `src/app/api/`
+Backend API routes for auth, bookings, admin functions, and temple data.
+
+### `src/components/`
+Reusable UI components.
+
+#### Main groups
+- `layout/` → header, footer, navbar, container
+- `booking/` → booking and payment UI
+- `auth/` → login-related UI
+- `admin/` → admin sidebar and content manager
+- `astrologer/` → astrologer cards and list UI
+- `common/` → loader and empty state
+- `ui/` → button, card, input, modal
+
+### `src/hooks/`
+Custom React hooks for auth and bookings.
+
+### `src/lib/`
+Shared utilities, API helpers, and MongoDB connection.
+
+### `src/pages/api/`
+Legacy API routes from the Pages Router.
+
+### `src/types/`
+TypeScript type definitions for users, bookings, and astrologers.
+
+### `middleware.ts`
+Likely used for route protection and auth checks.
+
+---
+
+## What the App Is Doing
+
+This app is likely built to:
+
+- display spiritual and temple-related content
+- let users explore pujas and offerings
+- allow online booking
+- process payments
+- manage user sessions
+- give admins control over site content and analytics
+
+---
+
+## Important Notes
+
+- The project uses both **App Router** and **Pages Router** API routes.
+- This suggests the codebase may have evolved over time.
+- The admin section is separated from the public site.
+- MongoDB is likely used as the database because `src/lib/mongodb.ts` exists.
+
+---
+
+## Next Step
+
+To understand the app fully, the next useful step is to inspect:
+
+- `package.json`
+- `src/app/page.tsx`
+- `src/app/layout.tsx`
+- `src/lib/api.ts`
+- `src/lib/mongodb.ts`
+- `src/app/api/auth/login/route.ts`
+- `src/app/api/bookings/create/route.ts`
+- `middleware.ts`
